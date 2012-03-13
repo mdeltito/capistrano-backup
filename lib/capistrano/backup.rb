@@ -59,7 +59,7 @@ Capistrano::Configuration.instance(true).load do
     end
 
     task :default do
-      update_config
+      update_config if autoupdate_config || ENV['UPDATE_CONFIG']
       prepare
       upload_archives
       cleanup
@@ -102,7 +102,7 @@ Capistrano::Configuration.instance(true).load do
         to = "#{working_dir}/#{plan_name}"
         logger.important "Running backup plan for `#{plan_name}' targets to #{to}"
         
-        # run each backup plan, notfiy on failure (but continue)
+        # run each backup plan, notify on failure (but continue)
         begin
           plan.archive!(targets, to)
         rescue Capistrano::Error => e
@@ -118,6 +118,7 @@ Capistrano::Configuration.instance(true).load do
     end
 
     task :cleanup do
+      logger.info "cleaning up working directory #{working_dir}"
       system "rm -rf #{working_dir}"
     end
 

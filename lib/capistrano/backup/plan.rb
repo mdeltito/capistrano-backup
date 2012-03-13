@@ -1,11 +1,11 @@
 module Capistrano
   module Backup
     module Plan
-      require_relative 'plans/base'
+      require 'capistrano/backup/plans/base'
 
       def self.new(plan, config={})
-        plan_file = "plans/#{plan}"
-        require_relative plan_file
+        plan_file = "capistrano/backup/plans/#{plan}"
+        require plan_file
         
         plan_const = plan.to_s.capitalize.gsub(/_(.)/) { $1.upcase }
         if const_defined?(plan_const)
